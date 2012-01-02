@@ -62,6 +62,17 @@ UnitProvider.prototype = {
         Search.SearchProvider.prototype._init.call(this, title);
     },
 
+    _tempRegex: /^(-?[0-9]+) ([FC]) ([FC])$/i,
+
+    _isTempConversion: function(term1, term2) {
+		return this._tempRegex.test(term1.concat(" ", term2))
+	},
+
+	_tempConversionRewrite: function(term1, term2) {
+		var parts = this._tempRegex.exec(term1.concat(" ", term2))
+		return ["temp".concat(parts[2].toUpperCase(), "(", parts[1], ")"), "temp".concat(parts[3].toUpperCase())];
+	},
+
     getInitialResultSet: function(terms) {
         var valid = false;
         var split = 0;
@@ -75,6 +86,11 @@ UnitProvider.prototype = {
 		if (valid) {
 			let one = terms.splice(0, split).join(" ");
 			let two = terms.splice(1).join(" ");
+			let expr = one.concat(" to ", two);
+
+			if(this._isTempConversion(one, two)) {
+				[one, two] = this._tempConversionRewrite(one, two);
+			}
 
             try {
 				let [success, out, err, error] = GLib.spawn_sync(null, ["units", one, two], null, 4, null)
@@ -85,7 +101,7 @@ UnitProvider.prototype = {
 					} else {
 						result = result.substring(1);
 					}
-					return [{'expr': one + " to " + two, 'result': result}];
+					return [{'expr': expr, 'result': result}];
 				}
             } catch(exp) {
             }
