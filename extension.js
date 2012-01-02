@@ -62,7 +62,7 @@ UnitProvider.prototype = {
         Search.SearchProvider.prototype._init.call(this, title);
     },
 
-    _tempRegex: /^(-?[0-9]+) ([FC]) ([FC])$/i,
+    _tempRegex: /^(-?[0-9]+)\s*([FC]) ([FC])$/i,
 
     _isTempConversion: function(term1, term2) {
 		return this._tempRegex.test(term1.concat(" ", term2))
