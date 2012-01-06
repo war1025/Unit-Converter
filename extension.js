@@ -101,6 +101,7 @@ UnitProvider.prototype = {
 					} else {
 						result = result.substring(1);
 					}
+					this._lastResult = result;
 					return [{'expr': expr, 'result': result}];
 				}
             } catch(exp) {
@@ -137,6 +138,9 @@ UnitProvider.prototype = {
     },
 
     activateResult: function(resultId) {
+		if(this._lastResult) {
+			St.Clipboard.get_default().set_text(this._lastResult);
+		}
         return true;
     }
 }
