@@ -74,6 +74,7 @@ UnitProvider.prototype = {
 	},
 
     getInitialResultSet: function(terms) {
+        terms = terms.slice();
         var valid = false;
         var split = 0;
         for(var i in terms) {
