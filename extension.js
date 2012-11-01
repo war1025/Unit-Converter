@@ -25,8 +25,7 @@ CalcResult.prototype = {
                                           vertical: false });
         this.actor.set_child(content);
 
-        let icon = new St.Icon({ icon_type: St.IconType.FULLCOLOR,
-                                 icon_size: ICON_SIZE,
+        let icon = new St.Icon({ icon_size: ICON_SIZE,
                                  icon_name: 'accessories-calculator',
                                  style_class: 'contact-icon' });
 
@@ -47,6 +46,7 @@ CalcResult.prototype = {
 
         result.add(exprLabel, { x_fill: false, x_align: St.Align.START });
         result.add(resultLabel, { x_fill: false, x_align: St.Align.START });
+		result.set_width(400);
     }
 
 };
@@ -74,7 +74,7 @@ UnitProvider.prototype = {
 	},
 
     getInitialResultSet: function(terms) {
-        terms = terms.slice();
+		terms = terms.slice();
         var valid = false;
         var split = 0;
         for(var i in terms) {
@@ -103,12 +103,15 @@ UnitProvider.prototype = {
 						result = result.substring(1);
 					}
 					this._lastResult = result;
+					this.searchSystem.pushResults(this,
+							[{'expr': expr, 'result': result}]);
 					return [{'expr': expr, 'result': result}];
 				}
             } catch(exp) {
             }
         }
 
+		this.searchSystem.pushResults(this, []);
         return [];
     },
 
@@ -116,11 +119,12 @@ UnitProvider.prototype = {
         return this.getInitialResultSet(terms);
     },
 
-    getResultMetas: function(result) {
+    getResultMetas: function(result, callback) {
 		let metas = [];
 		for(let i = 0; i < result.length; i++) {
 			metas.push({'id' : i, 'result' : result[i].result, 'expr' : result[i].expr});
 		}
+		callback(metas)
         return metas;
     },
 
