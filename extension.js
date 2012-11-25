@@ -94,14 +94,9 @@ UnitProvider.prototype = {
 			}
 
             try {
-				let [success, out, err, error] = GLib.spawn_sync(null, ["units", one, two], null, 4, null)
+				let [success, out, err, error] = GLib.spawn_sync(null, ["units", "-t", one, two], null, 4, null)
 				if(error == 0) {
-					result = out.toString().split('\n')[0];
-					if(result.indexOf("*") == 1) {
-						result = result.substring(3);
-					} else {
-						result = result.substring(1);
-					}
+					result = out.toString();
 					this._lastResult = result;
 					this.searchSystem.pushResults(this,
 							[{'expr': expr, 'result': result}]);
