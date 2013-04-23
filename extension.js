@@ -46,7 +46,7 @@ CalcResult.prototype = {
 
         result.add(exprLabel, { x_fill: false, x_align: St.Align.START });
         result.add(resultLabel, { x_fill: false, x_align: St.Align.START });
-		result.set_width(400);
+        result.set_width(400);
     }
 
 };
@@ -65,48 +65,48 @@ UnitProvider.prototype = {
     _tempRegex: /^(-?[0-9]+\.?[0-9]*)\s*([FCK]) ([FCK])$/i,
 
     _isTempConversion: function(term1, term2) {
-		return this._tempRegex.test(term1.concat(" ", term2))
-	},
+        return this._tempRegex.test(term1.concat(" ", term2))
+    },
 
-	_tempConversionRewrite: function(term1, term2) {
-		var parts = this._tempRegex.exec(term1.concat(" ", term2))
-		return ["temp".concat(parts[2].toUpperCase(), "(", parts[1], ")"), "temp".concat(parts[3].toUpperCase())];
-	},
+    _tempConversionRewrite: function(term1, term2) {
+        var parts = this._tempRegex.exec(term1.concat(" ", term2))
+        return ["temp".concat(parts[2].toUpperCase(), "(", parts[1], ")"), "temp".concat(parts[3].toUpperCase())];
+    },
 
     getInitialResultSet: function(terms) {
-		terms = terms.slice();
+        terms = terms.slice();
         var valid = false;
         var split = 0;
         for(var i in terms) {
-			if(terms[i] == "to") {
-				valid = true;
-				split = i;
-				break;
-			}
-		}
-		if (valid) {
-			let one = terms.splice(0, split).join(" ");
-			let two = terms.splice(1).join(" ");
-			let expr = one.concat(" to ", two);
+            if(terms[i] == "to") {
+                valid = true;
+                split = i;
+                break;
+            }
+        }
+        if (valid) {
+            let one = terms.splice(0, split).join(" ");
+            let two = terms.splice(1).join(" ");
+            let expr = one.concat(" to ", two);
 
-			if(this._isTempConversion(one, two)) {
-				[one, two] = this._tempConversionRewrite(one, two);
-			}
+            if(this._isTempConversion(one, two)) {
+                [one, two] = this._tempConversionRewrite(one, two);
+            }
 
             try {
-				let [success, out, err, error] = GLib.spawn_sync(null, ["units", "-t", one, two], null, 4, null)
-				if(error == 0) {
-					result = out.toString();
-					this._lastResult = result;
-					this.searchSystem.pushResults(this,
-							[{'expr': expr, 'result': result}]);
-					return [{'expr': expr, 'result': result}];
-				}
+                let [success, out, err, error] = GLib.spawn_sync(null, ["units", "-t", one, two], null, 4, null)
+                if(error == 0) {
+                    result = out.toString();
+                    this._lastResult = result;
+                    this.searchSystem.pushResults(this,
+                            [{'expr': expr, 'result': result}]);
+                    return [{'expr': expr, 'result': result}];
+                }
             } catch(exp) {
             }
         }
 
-		this.searchSystem.pushResults(this, []);
+        this.searchSystem.pushResults(this, []);
         return [];
     },
 
@@ -115,11 +115,11 @@ UnitProvider.prototype = {
     },
 
     getResultMetas: function(result, callback) {
-		let metas = [];
-		for(let i = 0; i < result.length; i++) {
-			metas.push({'id' : i, 'result' : result[i].result, 'expr' : result[i].expr});
-		}
-		callback(metas)
+        let metas = [];
+        for(let i = 0; i < result.length; i++) {
+            metas.push({'id' : i, 'result' : result[i].result, 'expr' : result[i].expr});
+        }
+        callback(metas)
         return metas;
     },
 
@@ -138,9 +138,9 @@ UnitProvider.prototype = {
     },
 
     activateResult: function(resultId) {
-		if(this._lastResult) {
-			St.Clipboard.get_default().set_text(this._lastResult.replace("\n", ""));
-		}
+        if(this._lastResult) {
+            St.Clipboard.get_default().set_text(this._lastResult.replace("\n", ""));
+        }
         return true;
     }
 }
