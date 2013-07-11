@@ -1,6 +1,7 @@
 {
-	"shell-version": ["3.6"],
+	"shell-version": ["3.6","3.8","3.8.1"],
 	"uuid": "UnitConverter@wrowclif.org",
 	"name": "Unit Converter",
-	"description": "Convert units from the overview search. In the form \"x this to that\""
+	"description": "Convert units from the overview search. In the form \"x this to that\"",
+	"url": "https://github.com/war1025/Unit-Converter"
 }
