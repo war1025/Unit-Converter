@@ -4,17 +4,15 @@ const Search = imports.ui.search;
 const SearchDisplay = imports.ui.searchDisplay;
 const IconGrid = imports.ui.iconGrid;
 const GLib = imports.gi.GLib;
+const Lang = imports.lang;
 
 const MAX_SEARCH_RESULTS_ROWS = 1;
 const ICON_SIZE = 81;
 
 let unitProvider = "";
 
-function CalcResult(result) {
-    this._init(result);
-}
-
-CalcResult.prototype = {
+const CalcResult = new Lang.Class({
+    Name: 'CalcResult',
     _init: function(resultMeta) {
 
         this.actor = new St.Bin({ style_class: 'contact',
@@ -49,17 +47,15 @@ CalcResult.prototype = {
 		result.set_width(400);
     }
 
-};
+});
 
-function UnitProvider() {
-    this._init.apply(this, arguments);
-}
 
-UnitProvider.prototype = {
-    __proto__: Search.SearchProvider.prototype,
+const UnitProvider = new Lang.Class({
+    Name: 'UnitProvider',
+    Extends: Search.SearchProvider,
 
     _init: function(title) {
-        Search.SearchProvider.prototype._init.call(this, title);
+        this.parent(title);
     },
 
     _tempRegex: /^(-?[0-9]+\.?[0-9]*)\s*([FCK]) ([FCK])$/i,
@@ -74,7 +70,7 @@ UnitProvider.prototype = {
 	},
 
     getInitialResultSet: function(terms) {
-		terms = terms.slice();
+	    terms = terms.slice();
         var valid = false;
         var split = 0;
         for(var i in terms) {
@@ -143,7 +139,7 @@ UnitProvider.prototype = {
 		}
         return true;
     }
-}
+});
 
 function init() {
     unitProvider = new UnitProvider('UNIT CONVERTER');
